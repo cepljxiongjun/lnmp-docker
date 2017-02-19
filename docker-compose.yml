@@ -1,0 +1,31 @@
+version: '2'
+
+services: 
+    nginx:
+        image: nginx:latest
+        ports: 
+            - 80:80
+        volumes:
+            - ./www:/usr/share/nginx/html
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./nginx/conf.d:/etc/nginx/conf.d:ro
+        links: 
+            - php-fpm:PHP_FPM
+    php-fpm:
+        build: ./php-fpm
+        ports: 
+            - 9000:9000
+        volumes: 
+            - ./php-fpm/php.ini:/usr/local/etc/php/php.ini.ro
+            - ./www:/usr/share/nginx/html
+        links: 
+           -  db:MYSQL
+    db:
+        image: mysql:5.7
+        ports: 
+            - 3306:3306
+        volumes: 
+            - ./db:/var/lib/mysql
+        environment: 
+            - MYSQL_ROOT_PASSWORD=root
+        
