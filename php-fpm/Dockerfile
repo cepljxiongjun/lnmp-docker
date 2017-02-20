@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y \
         libpng12-dev \
     && docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd && apt-get install -y libmemcached-dev zlib1g-dev \
-    && pecl install memcached-2.2.0 \
-    && docker-php-ext-enable memcached
+    && docker-php-ext-install -j$(nproc) gd 
+    
+RUN apt-get install -y libmemcached-dev zlib1g-dev && apt-get install -y git && git clone -b php7 https://github.com/php-memcached-dev/php-memcached /usr/src/php/ext/memcached \
+    && docker-php-ext-configure /usr/src/php/ext/memcached \
+        --disable-memcached-sasl \
+    && docker-php-ext-install /usr/src/php/ext/memcached \
+    && rm -rf /usr/src/php/ext/memcached
