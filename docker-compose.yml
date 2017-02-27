@@ -18,14 +18,4 @@ services:
         volumes: 
             - ./php-fpm/php.ini:/usr/local/etc/php/php.ini.ro
             - ./www:/usr/share/nginx/html
-        links: 
-           -  db:MYSQL
-    db:
-        image: mysql:5.7
-        ports: 
-            - 3306:3306
-        volumes: 
-            - ./db:/var/lib/mysql
-        environment: 
-            - MYSQL_ROOT_PASSWORD=root
         
