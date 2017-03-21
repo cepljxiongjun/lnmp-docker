@@ -4,9 +4,9 @@ services:
     nginx:
         image: nginx:latest
         ports: 
-            - 80:80
+            - "80:80"
         volumes:
-            - ./www:/usr/share/nginx/html
+            - ./../www:/usr/share/nginx/html
             - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./nginx/conf.d:/etc/nginx/conf.d:ro
         links: 
@@ -14,18 +14,26 @@ services:
     php-fpm:
         build: ./php-fpm
         ports: 
-            - 9000:9000
+            - "9000:9000"
         volumes: 
             - ./php-fpm/php.ini:/usr/local/etc/php/php.ini.ro
-            - ./www:/usr/share/nginx/html
+            - ./php-fpm/www.conf:/usr/local/etc/php/php-fpm.conf/www.conf.ro
+            - ./../www:/usr/share/nginx/html
         links: 
-           -  db:MYSQL
+           - db:MYSQL
+           - redis:REDIS
     db:
-        image: mysql:5.7
-        ports: 
-            - 3306:3306
-        volumes: 
-            - ./db:/var/lib/mysql
-        environment: 
+       image: mysql:5.7
+       ports: 
+           - "3306:3306"
+       volumes: 
+           - ./db:/var/lib/mysql
+       environment: 
             - MYSQL_ROOT_PASSWORD=root
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./redis:/data
         
